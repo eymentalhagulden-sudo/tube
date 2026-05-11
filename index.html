@@ -2,89 +2,161 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tube Mini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YouTube</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; }
         body {
             margin: 0; background: #0f0f0f; color: white;
-            font-family: Arial, sans-serif; display: flex; justify-content: center;
+            font-family: 'Roboto', Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        /* Tüm ekranı kaplamaması için genişlik sınırı */
-        .app-container {
-            width: 100%; max-width: 450px;
-            background: #000; min-height: 100vh;
-            border-left: 1px solid #333; border-right: 1px solid #333;
-        }
+
+        /* HEADER */
         header {
-            padding: 15px; display: flex; align-items: center;
-            position: sticky; top: 0; background: #000; z-index: 10;
+            position: sticky; top: 0; background: #0f0f0f;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 16px; z-index: 100; height: 48px;
         }
-        .logo { color: #ff0000; font-weight: bold; font-size: 24px; letter-spacing: -1px; }
-        .logo span { color: white; }
+        .yt-logo {
+            display: flex; align-items: center; gap: 4px;
+            font-weight: bold; font-size: 18px; letter-spacing: -0.5px;
+        }
+        .yt-logo svg { width: 30px; height: 22px; fill: red; }
 
-        .video-list { padding: 10px; }
-        .video-card { margin-bottom: 20px; cursor: pointer; }
+        /* KATEGORİLER */
+        .chips {
+            display: flex; gap: 12px; padding: 12px;
+            overflow-x: auto; white-space: nowrap; border-bottom: 1px solid #222;
+        }
+        .chips div {
+            background: #272727; padding: 6px 12px; border-radius: 8px;
+            font-size: 14px; color: white;
+        }
+        .chips div.active { background: white; color: black; }
+
+        /* VİDEO LİSTESİ */
+        .feed { padding-bottom: 60px; }
+        .video { margin-bottom: 24px; cursor: pointer; }
         
-        /* Görsel Alanı */
-        .thumb {
-            width: 100%; aspect-ratio: 16/9; border-radius: 12px;
-            background-size: cover; background-position: center;
-            position: relative; border: 1px solid #222;
+        .thumbnail-box {
+            width: 100%; aspect-ratio: 16/9; background: #222;
+            position: relative;
         }
-        .time {
+        .thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
+        .duration {
             position: absolute; bottom: 8px; right: 8px;
-            background: rgba(0,0,0,0.8); padding: 2px 6px;
-            border-radius: 4px; font-size: 12px;
+            background: rgba(0,0,0,0.8); padding: 2px 4px;
+            font-size: 12px; border-radius: 4px; font-weight: 500;
         }
 
-        .meta { display: flex; margin-top: 10px; gap: 12px; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; }
-        .info h4 { margin: 0; font-size: 14px; line-height: 1.2; color: #efefef; }
-        .info p { margin: 4px 0; font-size: 12px; color: #aaa; }
+        .details { display: flex; padding: 12px; gap: 12px; }
+        .channel-pfp {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #333; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px;
+        }
+        .text-side h3 {
+            margin: 0; font-size: 14px; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .text-side p { margin: 4px 0 0; font-size: 12px; color: #aaa; }
+
+        /* ALT NAVBAR */
+        footer {
+            position: fixed; bottom: 0; width: 100%;
+            background: #0f0f0f; border-top: 1px solid #272727;
+            display: flex; justify-content: space-around; padding: 8px 0;
+            font-size: 10px;
+        }
+        .nav-item { text-align: center; color: white; }
+        .nav-item svg { width: 24px; height: 24px; fill: white; margin-bottom: 2px; }
+
+        /* Oynatma Efekti */
+        .playing-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none;
+            align-items: center; justify-content: center; font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header><div class="logo">Tube<span>Mini</span></div></header>
-
-    <div class="video-list" id="feed">
-        <!-- Videolar JavaScript ile dolacak -->
+<header>
+    <div class="yt-logo">
+        <svg viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg>
+        YouTube
     </div>
+    <div style="display: flex; gap: 20px;">
+        <span>🔍</span>
+        <div class="channel-pfp" style="width: 24px; height: 24px; background: #3fb11a; font-size: 10px;">M</div>
+    </div>
+</header>
+
+<div class="chips">
+    <div class="active">Tümü</div>
+    <div>Minecraft</div>
+    <div>Canlı</div>
+    <div>Oyun</div>
+    <div>Teknoloji</div>
+    <div>Müzik</div>
+    <div>Roblox</div>
 </div>
+
+<div class="feed" id="mainFeed">
+    <!-- Videolar Buraya Gelecek -->
+</div>
+
+<footer>
+    <div class="nav-item">🏠<br>Ana Sayfa</div>
+    <div class="nav-item">🩳<br>Shorts</div>
+    <div class="nav-item" style="font-size: 24px;">⊕</div>
+    <div class="nav-item">🔔<br>Abonelikler</div>
+    <div class="nav-item">👤<br>Siz</div>
+</footer>
 
 <script>
     const videos = [
-        { title: "MusaMert231: Donut SMP'de Büyük Baskın!", user: "MusaMert231", views: "1.2M", time: "10:05", img: "https://picsum.photos/seed/mc1/400/225", color: "gold" },
-        { title: "Pokemon06 ile Blox Fruits Taktikleri", user: "Pokemon06", views: "850B", time: "15:20", img: "https://picsum.photos/seed/roblox1/400/225", color: "cyan" },
-        { title: "FCO0: Modern Redstone Şehri Yapımı", user: "FCO0", views: "500B", time: "22:45", img: "https://picsum.photos/seed/mc2/400/225", color: "orange" },
-        { title: "Teknofest Projemiz: Akıllı Hasat Testi", user: "TeknoTeam", views: "100B", time: "05:30", img: "https://picsum.photos/seed/tech1/400/225", color: "green" },
-        { title: "Minecraft 100 Gün Survival - Hardcore", user: "GamerTR", views: "2M", time: "45:00", img: "https://picsum.photos/seed/mc3/400/225", color: "red" },
-        { title: "Brawl Stars Yeni Karakter İnceleme", user: "StarGamer", views: "300B", time: "08:15", img: "https://picsum.photos/seed/bs1/400/225", color: "purple" },
-        { title: "Lunar Research Oyunu Geliştirme Günlüğü", user: "DevLog", views: "50B", time: "12:10", img: "https://picsum.photos/seed/space1/400/225", color: "blue" },
-        { title: "Dünyanın En Güçlü Minecraft Drilli!", user: "ItemMaster", views: "900B", time: "06:40", img: "https://picsum.photos/seed/mc4/400/225", color: "yellow" },
-        { title: "Discord Bot Yapımı 2026 Rehberi", user: "CodeHero", views: "150B", time: "18:25", img: "https://picsum.photos/seed/code1/400/225", color: "silver" },
-        { title: "Gizemli Server: Donut SMP Kuralları", user: "AdminX", views: "250B", time: "09:50", img: "https://picsum.photos/seed/mc5/400/225", color: "pink" }
+        { title: "MusaMert231: Donut SMP Sezon Finali! (Efsane Baskın)", user: "MusaMert231", views: "1.5M", time: "2 saat önce", dur: "12:44", pfp: "gold", img: "https://picsum.photos/seed/mc1/400/225" },
+        { title: "Pokemon06: Blox Fruits Gizli Drill Taktiği", user: "Pokemon06", views: "900B", time: "5 saat önce", dur: "08:15", pfp: "#00e5ff", img: "https://picsum.photos/seed/blox1/400/225" },
+        { title: "FCO0 ile Dev Redstone Fabrikası Kuruyoruz", user: "FCO0", views: "650B", time: "1 gün önce", dur: "22:10", pfp: "orange", img: "https://picsum.photos/seed/redstone/400/225" },
+        { title: "Minecraft Ama Her Şey Elmas!", user: "Gamer_TR", views: "2.1M", time: "3 saat önce", dur: "15:00", pfp: "red", img: "https://picsum.photos/seed/mc3/400/225" },
+        { title: "Teknofest 2026: Akıllı Pamuk Hasat Sistemi Sunumu", user: "TeknoTeam", views: "120B", time: "6 saat önce", dur: "05:45", pfp: "#3fb11a", img: "https://picsum.photos/seed/cotton/400/225" },
+        { title: "Donut SMP'de Admin Oldum!", user: "MusaMert231", views: "800B", time: "4 saat önce", dur: "10:20", pfp: "gold", img: "https://picsum.photos/seed/admin/400/225" },
+        { title: "Discord Botunu 5 Dakikada Yap!", user: "CodeLab", views: "300B", time: "2 gün önce", dur: "06:30", pfp: "blue", img: "https://picsum.photos/seed/code/400/225" },
+        { title: "Brawl Stars Yeni Güncelleme Sızdı!", user: "BrawlStar", views: "500B", time: "12 saat önce", dur: "07:50", pfp: "purple", img: "https://picsum.photos/seed/brawl/400/225" },
+        { title: "Uzay Oyunu AYAP-1 Gelişmeler", user: "MoonDev", views: "45B", time: "20 saat önce", dur: "13:12", pfp: "silver", img: "https://picsum.photos/seed/space/400/225" },
+        { title: "Dünyanın En Şanslı Minecraft Oyuncusu", user: "LuckMC", views: "4M", time: "1 hafta önce", dur: "11:05", pfp: "cyan", img: "https://picsum.photos/seed/luck/400/225" }
     ];
 
-    const feed = document.getElementById('feed');
+    const mainFeed = document.getElementById('mainFeed');
 
     videos.forEach(v => {
-        feed.innerHTML += `
-            <div class="video-card">
-                <div class="thumb" style="background-image: url('${v.img}')">
-                    <div class="time">${v.time}</div>
+        mainFeed.innerHTML += `
+            <div class="video" onclick="playVideo(this)">
+                <div class="thumbnail-box">
+                    <img src="${v.img}" alt="thumb">
+                    <div class="duration">${v.dur}</div>
+                    <div class="playing-overlay">▶ Oynatılıyor...</div>
                 </div>
-                <div class="meta">
-                    <div class="avatar" style="background: ${v.color}"></div>
-                    <div class="info">
-                        <h4>${v.title}</h4>
-                        <p>${v.user} • ${v.views} izlenme</p>
+                <div class="details">
+                    <div class="channel-pfp" style="background: ${v.pfp}">${v.user[0]}</div>
+                    <div class="text-side">
+                        <h3>${v.title}</h3>
+                        <p>${v.user} • ${v.views} izlenme • ${v.time}</p>
                     </div>
                 </div>
             </div>
         `;
     });
+
+    function playVideo(el) {
+        const overlay = el.querySelector('.playing-overlay');
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.style.display = 'none'; }, 2000);
+    }
 </script>
 
 </body>
