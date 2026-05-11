@@ -2,191 +2,90 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tube - Video Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tube Mini</title>
     <style>
-        :root {
-            --tube-red: #ff0000;
-            --tube-dark: #0f0f0f;
-            --tube-gray: #272727;
-        }
-
         body {
-            margin: 0; padding: 0;
-            background-color: var(--tube-dark);
-            color: white;
-            font-family: 'Roboto', sans-serif;
-            padding-bottom: 70px; /* Alt bar için boşluk */
+            margin: 0; background: #0f0f0f; color: white;
+            font-family: Arial, sans-serif; display: flex; justify-content: center;
         }
-
-        /* Header */
+        /* Tüm ekranı kaplamaması için genişlik sınırı */
+        .app-container {
+            width: 100%; max-width: 450px;
+            background: #000; min-height: 100vh;
+            border-left: 1px solid #333; border-right: 1px solid #333;
+        }
         header {
-            position: sticky; top: 0;
-            background: var(--tube-dark);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 15px;
-            z-index: 1000;
+            padding: 15px; display: flex; align-items: center;
+            position: sticky; top: 0; background: #000; z-index: 10;
         }
+        .logo { color: #ff0000; font-weight: bold; font-size: 24px; letter-spacing: -1px; }
+        .logo span { color: white; }
 
-        .logo {
-            font-family: 'Oswald', sans-serif;
-            font-size: 24px;
-            color: white;
-            display: flex; align-items: center; gap: 5px;
-            text-decoration: none;
+        .video-list { padding: 10px; }
+        .video-card { margin-bottom: 20px; cursor: pointer; }
+        
+        /* Görsel Alanı */
+        .thumb {
+            width: 100%; aspect-ratio: 16/9; border-radius: 12px;
+            background-size: cover; background-position: center;
+            position: relative; border: 1px solid #222;
         }
-
-        .logo span {
-            background: var(--tube-red);
-            padding: 2px 8px;
-            border-radius: 8px;
-        }
-
-        .user-icon {
-            width: 32px; height: 32px;
-            background: #3fb11a;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 12px;
-        }
-
-        /* Video Listesi */
-        .video-feed {
-            display: flex; flex-direction: column; gap: 20px;
-        }
-
-        .video-card {
-            width: 100%;
-        }
-
-        .thumbnail {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #333;
-            position: relative;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 20px;
-            background: linear-gradient(45deg, #1e1e1e, #2a2a2a);
-        }
-
-        .duration {
+        .time {
             position: absolute; bottom: 8px; right: 8px;
-            background: rgba(0,0,0,0.8);
-            padding: 2px 5px; border-radius: 4px; font-size: 12px;
+            background: rgba(0,0,0,0.8); padding: 2px 6px;
+            border-radius: 4px; font-size: 12px;
         }
 
-        .video-info {
-            display: flex; padding: 12px; gap: 12px;
-        }
-
-        .channel-img {
-            width: 36px; height: 36px;
-            border-radius: 50%; background: #555;
-            flex-shrink: 0;
-        }
-
-        .text-info h3 {
-            margin: 0; font-size: 14px; line-height: 1.4;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-        }
-
-        .text-info p {
-            margin: 5px 0 0; font-size: 12px; color: #aaa;
-        }
-
-        /* Alt Navigasyon Bar */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%;
-            background: var(--tube-dark);
-            border-top: 1px solid #222;
-            display: flex; justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .nav-item {
-            text-align: center; font-size: 10px; color: #aaa;
-        }
-
-        .nav-item div { font-size: 20px; margin-bottom: 2px; }
-        .nav-item.active { color: white; }
-
+        .meta { display: flex; margin-top: 10px; gap: 12px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; }
+        .info h4 { margin: 0; font-size: 14px; line-height: 1.2; color: #efefef; }
+        .info p { margin: 4px 0; font-size: 12px; color: #aaa; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="#" class="logo"><span>T</span> Tube</a>
-        <div style="display: flex; gap: 15px; align-items: center;">
-            <span>🔍</span>
-            <div class="user-icon">M</div>
-        </div>
-    </header>
+<div class="app-container">
+    <header><div class="logo">Tube<span>Mini</span></div></header>
 
-    <div class="video-feed">
-        
-        <!-- Video 1 -->
-        <div class="video-card">
-            <div class="thumbnail" style="border-bottom: 3px solid var(--tube-red);">
-                MC SUNUCUSUNDA BASKIN! ⚔️
-                <div class="duration">12:45</div>
-            </div>
-            <div class="video-info">
-                <div class="channel-img" style="background: gold;"></div>
-                <div class="text-info">
-                    <h3>MusaMert231 ile Donut SMP Sezon Finali!</h3>
-                    <p>MusaMert231 • 1.2M Görüntüleme • 2 saat önce</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Video 2 -->
-        <div class="video-card">
-            <div class="thumbnail" style="border-bottom: 3px solid #00e5ff;">
-                POKEMON06 ÖZEL TAKTİKLER 🧠
-                <div class="duration">08:20</div>
-            </div>
-            <div class="video-info">
-                <div class="channel-img" style="background: #00e5ff;"></div>
-                <div class="text-info">
-                    <h3>Bedwars'ta Kimsenin Bilmediği 5 Taktik</h3>
-                    <p>Pokemon06 • 850B Görüntüleme • 5 saat önce</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Video 3 -->
-        <div class="video-card">
-            <div class="thumbnail" style="border-bottom: 3px solid #ffbb33;">
-                MODERN ŞEHİR REHBERİ 🏗️
-                <div class="duration">15:10</div>
-            </div>
-            <div class="video-info">
-                <div class="channel-img" style="background: #ffbb33;"></div>
-                <div class="text-info">
-                    <h3>FCO0 ile Redstone Sistemleri ve Dev Yapılar</h3>
-                    <p>FCO0 • 500B Görüntüleme • 1 gün önce</p>
-                </div>
-            </div>
-        </div>
-
+    <div class="video-list" id="feed">
+        <!-- Videolar JavaScript ile dolacak -->
     </div>
+</div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active"><div>🏠</div>Ana Sayfa</div>
-        <div class="nav-item"><div>📱</div>Shorts</div>
-        <div class="nav-item" style="font-size: 30px;">⊕</div>
-        <div class="nav-item"><div>🔔</div>Bildirimler</div>
-        <div class="nav-item"><div>👤</div>Siz</div>
-    </nav>
+<script>
+    const videos = [
+        { title: "MusaMert231: Donut SMP'de Büyük Baskın!", user: "MusaMert231", views: "1.2M", time: "10:05", img: "https://picsum.photos/seed/mc1/400/225", color: "gold" },
+        { title: "Pokemon06 ile Blox Fruits Taktikleri", user: "Pokemon06", views: "850B", time: "15:20", img: "https://picsum.photos/seed/roblox1/400/225", color: "cyan" },
+        { title: "FCO0: Modern Redstone Şehri Yapımı", user: "FCO0", views: "500B", time: "22:45", img: "https://picsum.photos/seed/mc2/400/225", color: "orange" },
+        { title: "Teknofest Projemiz: Akıllı Hasat Testi", user: "TeknoTeam", views: "100B", time: "05:30", img: "https://picsum.photos/seed/tech1/400/225", color: "green" },
+        { title: "Minecraft 100 Gün Survival - Hardcore", user: "GamerTR", views: "2M", time: "45:00", img: "https://picsum.photos/seed/mc3/400/225", color: "red" },
+        { title: "Brawl Stars Yeni Karakter İnceleme", user: "StarGamer", views: "300B", time: "08:15", img: "https://picsum.photos/seed/bs1/400/225", color: "purple" },
+        { title: "Lunar Research Oyunu Geliştirme Günlüğü", user: "DevLog", views: "50B", time: "12:10", img: "https://picsum.photos/seed/space1/400/225", color: "blue" },
+        { title: "Dünyanın En Güçlü Minecraft Drilli!", user: "ItemMaster", views: "900B", time: "06:40", img: "https://picsum.photos/seed/mc4/400/225", color: "yellow" },
+        { title: "Discord Bot Yapımı 2026 Rehberi", user: "CodeHero", views: "150B", time: "18:25", img: "https://picsum.photos/seed/code1/400/225", color: "silver" },
+        { title: "Gizemli Server: Donut SMP Kuralları", user: "AdminX", views: "250B", time: "09:50", img: "https://picsum.photos/seed/mc5/400/225", color: "pink" }
+    ];
 
-    <script>
-        // Basit etkileşim: Videolara tıklayınca uyarı ver
-        document.querySelectorAll('.video-card').forEach(card => {
-            card.addEventListener('click', () => {
-                alert("Bu video şu an yükleniyor, lütfen bekleyin...");
-            });
-        });
-    </script>
+    const feed = document.getElementById('feed');
+
+    videos.forEach(v => {
+        feed.innerHTML += `
+            <div class="video-card">
+                <div class="thumb" style="background-image: url('${v.img}')">
+                    <div class="time">${v.time}</div>
+                </div>
+                <div class="meta">
+                    <div class="avatar" style="background: ${v.color}"></div>
+                    <div class="info">
+                        <h4>${v.title}</h4>
+                        <p>${v.user} • ${v.views} izlenme</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+</script>
+
 </body>
 </html>
